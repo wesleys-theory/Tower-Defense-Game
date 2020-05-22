@@ -1,7 +1,4 @@
-import bagel.AbstractGame;
-import bagel.Image;
-import bagel.Input;
-import bagel.Window;
+import bagel.*;
 import bagel.map.TiledMap;
 
 import java.util.ArrayList;
@@ -11,23 +8,27 @@ import java.util.ArrayList;
 
 public class ShadowDefend extends AbstractGame {
 
-    private static final int HEIGHT = 768;
-    private static final int WIDTH = 1024;
+    // Made public for drawing purposes
+    public static final int HEIGHT = 768;
+    public static final int WIDTH = 1024;
 
     private final ArrayList<Level> levels;
     private int levelIndex;
     private BuyPanel buyPanel;
+    private StatusPanel statusPanel;
+    public static TiledMap currentMap;
 
 
     public ShadowDefend() {
         super(WIDTH, HEIGHT, "ShadowDefend");
         levels = new ArrayList<>();
-        levels.add(new Level("res/levels/1.tmx"));
-        levels.add(new Level("res/levels/2.tmx"));
+        levels.add(new Level("res/levels/1.tmx", "res/levels/waves.txt"));
+        levels.add(new Level("res/levels/2.tmx", "res/levels/waves.txt"));
         levelIndex = 0;
         // Fixes rendering glitch
         new Image("res/images/slicer.png");
         buyPanel = new BuyPanel();
+        statusPanel = new StatusPanel();
 
     }
 
@@ -37,7 +38,18 @@ public class ShadowDefend extends AbstractGame {
 
     @Override
     protected void update(Input input) {
+        if (getCurrentLevel().levelFinished() && levelIndex + 1 == levels.size()) {
+            System.out.println("WINNER");
+        }
+        else if (getCurrentLevel().levelFinished()) {
+            levelIndex++;
+        }
+
         getCurrentLevel().drawMap(WIDTH, HEIGHT);
+        getCurrentLevel().update(input);
+        getCurrentLevel().getWave().registerObserver(statusPanel);
+        currentMap = levels.get(levelIndex).getMap();
+        statusPanel.update(input);
         render();
     }
 
@@ -47,5 +59,6 @@ public class ShadowDefend extends AbstractGame {
 
     public void render() {
         buyPanel.render();
+        statusPanel.render();
     }
 }

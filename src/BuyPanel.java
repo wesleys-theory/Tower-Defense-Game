@@ -7,9 +7,8 @@ import bagel.util.Point;
 import java.util.ArrayList;
 
 public class BuyPanel {
-    private final static int HEIGHT = 768;
-    private final static int WIDTH = 1024;
 
+    private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
     private final static int START_MONEY = 500;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
@@ -31,9 +30,9 @@ public class BuyPanel {
     private Font keyBindFont;
 
     public BuyPanel() {
-        this.costFont = new Font("res/fonts/DejaVuSans-Bold.ttf", COST_SIZE);
-        this.moneyFont = new Font("res/fonts/DejaVuSans-Bold.ttf", MONEY_SIZE);
-        this.keyBindFont = new Font("res/fonts/DejaVuSans-Bold.ttf", KEYBIND_SIZE);
+        this.costFont = new Font(FONT_LOCATION, COST_SIZE);
+        this.moneyFont = new Font(FONT_LOCATION, MONEY_SIZE);
+        this.keyBindFont = new Font(FONT_LOCATION, KEYBIND_SIZE);
 
         money = START_MONEY;
         background = new Image("res/images/buypanel.png");
@@ -58,9 +57,9 @@ public class BuyPanel {
     }
 
     public void render() {
-        double height = background.getHeight()/2;
-        double width = background.getWidth()/2;
-        background.draw(width, height);
+        double y_location = background.getHeight()/2;
+        double x_location = background.getWidth()/2;
+        background.draw(x_location, y_location);
         drawPurchaseItems();
         drawMoney();
         drawKeyBinds();
@@ -86,7 +85,7 @@ public class BuyPanel {
 
     public void drawMoney() {
         String output = String.format("$%d", money);
-        moneyFont.drawString(output, WIDTH - OFFSET_FROM_RIGHT, OFFSET_FROM_TOP);
+        moneyFont.drawString(output, ShadowDefend.WIDTH - OFFSET_FROM_RIGHT, OFFSET_FROM_TOP);
     }
 
     public void drawKeyBinds() {

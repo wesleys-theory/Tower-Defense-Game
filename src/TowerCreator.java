@@ -14,11 +14,13 @@ public class TowerCreator {
             newTower = new Tank(TANK_RADIUS, new Point(0,0));
             newTower.setCost(TANK_COST);
             newTower.setImage(new Image("res/images/tank.png"));
+            newTower.setSpeed(0);
         }
         else if (towerType.equals("supertank")) {
             newTower = new Tank(SUPERTANK_RADIUS, new Point(0, 0));
             newTower.setCost(SUPERTANK_COST);
             newTower.setImage(new Image("res/images/supertank.png"));
+            newTower.setSpeed(0);
         }
         else if (towerType.equals("airplane")) {
             newTower = new Airplane(new Point(0, 0));
