@@ -1,12 +1,11 @@
-import bagel.DrawOptions;
-import bagel.Font;
-import bagel.Image;
+import bagel.*;
 import bagel.util.Colour;
 import bagel.util.Point;
+import bagel.util.Rectangle;
 
 import java.util.ArrayList;
 
-public class BuyPanel {
+public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
     private final static int START_MONEY = 500;
@@ -24,15 +23,33 @@ public class BuyPanel {
 
     private int money;
     private ArrayList<Tower> purchaseItems;
+    private ArrayList<Tower> activeTowers;
+    private Tower selectedTower;
+    private boolean towerSelected;
     private Image background;
     private Font costFont;
     private Font moneyFont;
     private Font keyBindFont;
+    private TowerCreator towerCreator;
+    private ArrayList<Observer> observers;
+
+    public ArrayList<Tower> getActiveTowers() {
+        return activeTowers;
+    }
+
+    public boolean placing() {
+        return towerSelected;
+    }
 
     public BuyPanel() {
         this.costFont = new Font(FONT_LOCATION, COST_SIZE);
         this.moneyFont = new Font(FONT_LOCATION, MONEY_SIZE);
         this.keyBindFont = new Font(FONT_LOCATION, KEYBIND_SIZE);
+        this.activeTowers = new ArrayList<>();
+        this.selectedTower = null;
+        this.towerSelected = false;
+        this.towerCreator = new TowerCreator();
+        this.observers = new ArrayList<>();
 
         money = START_MONEY;
         background = new Image("res/images/buypanel.png");
@@ -91,5 +108,91 @@ public class BuyPanel {
     public void drawKeyBinds() {
         String output = "Key binds:\n\nS - Start Wave\nL - Increase Timescale\nK - Decrease Timescale";
         keyBindFont.drawString(output, background.getWidth()/2 - KEYBIND_OFFSET, KEYBIND_HEIGHT);
+    }
+
+    public void checkPurchase(Input input) {
+
+        for (Tower tower:purchaseItems) {
+            Rectangle hitBox = tower.getHitBox();
+            if (hitBox.intersects(input.getMousePosition()) && input.wasPressed(MouseButtons.LEFT) && !towerSelected
+                && tower.getCost() <= money) {
+                towerSelected = true;
+                selectedTower = towerCreator.makeTower(tower.getType());
+                return;
+            }
+        }
+        if (towerSelected && input.wasPressed(MouseButtons.RIGHT)) {
+            towerSelected = false;
+            selectedTower = null;
+        }
+        else if (towerSelected && input.wasPressed(MouseButtons.LEFT) && !selectedTower.blockedLocation()) {
+            activeTowers.add(selectedTower);
+            money -= selectedTower.getCost();
+            towerSelected = false;
+            selectedTower = null;
+        }
+        else if (towerSelected) {
+            selectedTower.setLocation(input.getMousePosition());
+        }
+    }
+
+    public void drawActiveTowers() {
+        for (Tower tower : activeTowers) {
+            tower.render();
+        }
+    }
+
+
+    public void drawSelected() {
+        if (!towerSelected ) {
+            return;
+        }
+        if (!selectedTower.blockedLocation()) {
+            selectedTower.render();
+        }
+    }
+
+    public void update(Input input) {
+        drawMoney();
+        drawKeyBinds();
+        drawPurchaseItems();
+        checkPurchase(input);
+        drawSelected();
+        drawActiveTowers();
+        notifyObservers();
+    }
+
+    public void reset() {
+        getActiveTowers().clear();
+        money = START_MONEY;
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void unregisterObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
+    }
+
+    @Override
+    public void update(Subject subject) {
+        if (subject instanceof Wave) {
+            Wave wave = (Wave) subject;
+            if (wave.isFinished()) {
+                money += 150 + (wave.getWaveIndex() + 1)*100;
+            }
+        }
     }
 }

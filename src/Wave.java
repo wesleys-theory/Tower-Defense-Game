@@ -105,7 +105,7 @@ public class Wave implements Subject {
         return slicersOnScreen;
     }
 
-    public int getWaveNum() {
+    public int getWaveIndex() {
         return waveNum;
     }
 

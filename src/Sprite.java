@@ -45,7 +45,7 @@ public abstract class Sprite {
     }
 
     public Rectangle getHitBox() {
-        return hitBox;
+        return this.image.getBoundingBoxAt(this.location);
     }
 
     public void setHitBox(Rectangle hitBox) {
@@ -62,5 +62,13 @@ public abstract class Sprite {
 
     public void render() {
         this.image.draw(this.location.x, this.location.y);
+    }
+
+    public boolean blockedLocation() {
+        if (this.getLocation().x >= ShadowDefend.WIDTH | this.getLocation().y >= ShadowDefend.HEIGHT) {
+            return true;
+        }
+        return ShadowDefend.currentMap.getPropertyBoolean((int) this.getLocation().x,
+                (int) this.getLocation().y,"blocked", false);
     }
 }

@@ -29,6 +29,7 @@ public class ShadowDefend extends AbstractGame {
         new Image("res/images/slicer.png");
         buyPanel = new BuyPanel();
         statusPanel = new StatusPanel();
+        buyPanel.registerObserver(statusPanel);
 
     }
 
@@ -43,13 +44,16 @@ public class ShadowDefend extends AbstractGame {
         }
         else if (getCurrentLevel().levelFinished()) {
             levelIndex++;
+            buyPanel.reset();
         }
 
         getCurrentLevel().drawMap(WIDTH, HEIGHT);
         getCurrentLevel().update(input);
         getCurrentLevel().getWave().registerObserver(statusPanel);
+        getCurrentLevel().getWave().registerObserver(buyPanel);
         currentMap = levels.get(levelIndex).getMap();
         statusPanel.update(input);
+        buyPanel.update(input);
         render();
     }
 

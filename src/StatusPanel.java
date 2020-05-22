@@ -94,8 +94,14 @@ public class StatusPanel implements Observer {
 
     @Override
     public void update(Subject subject) {
-        Wave wave = (Wave) subject;
-        statuses[WAVE_INDEX] = wave.hasStarted();
-        this.waveNumber = wave.getWaveNum() + 1;
+        if (subject instanceof Wave) {
+            Wave wave = (Wave) subject;
+            statuses[WAVE_INDEX] = wave.hasStarted();
+            this.waveNumber = wave.getWaveIndex() + 1;
+        }
+        else if (subject instanceof BuyPanel) {
+            BuyPanel buyPanel = (BuyPanel) subject;
+            statuses[PLACING_INDEX] = buyPanel.placing();
+        }
     }
 }
