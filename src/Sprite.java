@@ -61,7 +61,7 @@ public abstract class Sprite {
     }
 
     public void render() {
-        this.image.draw(this.location.x, this.location.y);
+        this.image.draw(this.location.x, this.location.y, new DrawOptions().setRotation(getAngle()));
     }
 
     public boolean blockedLocation() {
@@ -71,4 +71,5 @@ public abstract class Sprite {
         return ShadowDefend.currentMap.getPropertyBoolean((int) this.getLocation().x,
                 (int) this.getLocation().y,"blocked", false);
     }
+
 }

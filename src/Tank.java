@@ -1,7 +1,11 @@
 import bagel.util.Point;
 
 public class Tank extends Tower {
-    int effectRadius;
+    private int effectRadius;
+
+    public int getEffectRadius() {
+        return effectRadius;
+    }
 
     public Tank(int radius, Point point) {
         super(point);

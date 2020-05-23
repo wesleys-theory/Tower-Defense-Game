@@ -17,6 +17,10 @@ public class Wave implements Subject {
     private ArrayList<Observer> observers;
     private int waveNum;
 
+    public ArrayList<Slicer> getSlicers() {
+        return slicers;
+    }
+
     public boolean isFinished() {
         return this.finished;
     }
@@ -96,11 +100,21 @@ public class Wave implements Subject {
             startNextEvent();
         }
         slicersOnScreen = false;
+        ArrayList<Slicer> toBeDespawned = new ArrayList<>();
         for (Slicer slicer : slicers) {
-            if (!slicer.atEnd())
-            slicersOnScreen = true;
+            if (!slicer.atEnd()) {
+                slicersOnScreen = true;
+            }
+            if (slicer.getHealth() <= 0) {
+                toBeDespawned.add(slicer);
+            }
             slicer.move();
+            slicer.notifyObservers();
             slicer.render();
+        }
+
+        for (Slicer slicer : toBeDespawned) {
+            slicers.remove(slicer);
         }
         return slicersOnScreen;
     }

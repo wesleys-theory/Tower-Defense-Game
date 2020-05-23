@@ -2,9 +2,10 @@ import bagel.DrawOptions;
 import bagel.util.Point;
 import bagel.util.Vector2;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Slicer extends Sprite {
+public class Slicer extends Sprite implements Subject {
     public static final double baseSpeed = ((double)(144)) / ((double)(Clock.refreshRate));
 
     private int pointIndex;
@@ -14,6 +15,7 @@ public class Slicer extends Sprite {
     private int penalty;
     private Point nextPoint;
     private boolean isAlive;
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     public int getPointIndex() {
         return pointIndex;
@@ -29,6 +31,9 @@ public class Slicer extends Sprite {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+    public void reduceHealth(int amount) {
+        this.health -= amount;
     }
 
     public int getReward() {
@@ -95,9 +100,6 @@ public class Slicer extends Sprite {
         }
     }
 
-    public void render() {
-        this.getImage().draw(this.getLocation().x, this.getLocation().y, new DrawOptions().setRotation(getAngle()));
-    }
 
     public boolean atEnd() {
         // Checks if the enemy is at the last polyline
@@ -106,4 +108,22 @@ public class Slicer extends Sprite {
         return (this.getLocation().asVector().sub(this.polyLine.get(endIndex).asVector()).length() < baseSpeed);
     }
 
+    @Override
+    public void registerObserver(Observer observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void unregisterObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
+    }
 }

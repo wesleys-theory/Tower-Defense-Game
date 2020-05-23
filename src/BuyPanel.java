@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
-    private final static int START_MONEY = 500;
+    private final static int START_MONEY = 10000;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
     private final static int OFFSET_FROM_RIGHT = 200;
@@ -20,6 +20,8 @@ public class BuyPanel implements Subject, Observer {
     private final static int KEYBIND_SIZE = 15;
     private final static int KEYBIND_HEIGHT = 20;
     private final static int KEYBIND_OFFSET = 30;
+    private static final int REWARD_MULTIPLIER = 100;
+    private static final int BASE_REWARD = 150;
 
     private int money;
     private ArrayList<Tower> purchaseItems;
@@ -32,6 +34,7 @@ public class BuyPanel implements Subject, Observer {
     private Font keyBindFont;
     private TowerCreator towerCreator;
     private ArrayList<Observer> observers;
+    private ArrayList<Slicer> slicers;
 
     public ArrayList<Tower> getActiveTowers() {
         return activeTowers;
@@ -50,6 +53,7 @@ public class BuyPanel implements Subject, Observer {
         this.towerSelected = false;
         this.towerCreator = new TowerCreator();
         this.observers = new ArrayList<>();
+        this.slicers = new ArrayList<>();
 
         money = START_MONEY;
         background = new Image("res/images/buypanel.png");
@@ -138,6 +142,8 @@ public class BuyPanel implements Subject, Observer {
 
     public void drawActiveTowers() {
         for (Tower tower : activeTowers) {
+            tower.getAbility().performAbility(slicers, tower);
+            tower.getAbility().getCooldownBehaviour().updateCooldown();
             tower.render();
         }
     }
@@ -191,8 +197,9 @@ public class BuyPanel implements Subject, Observer {
         if (subject instanceof Wave) {
             Wave wave = (Wave) subject;
             if (wave.isFinished()) {
-                money += 150 + (wave.getWaveIndex() + 1)*100;
+                money += BASE_REWARD + (wave.getWaveIndex() + 1)*REWARD_MULTIPLIER;
             }
+            this.slicers = wave.getSlicers();
         }
     }
 }
