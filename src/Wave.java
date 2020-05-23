@@ -1,5 +1,6 @@
 import bagel.Input;
 import bagel.Keys;
+import bagel.util.Point;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,6 +17,8 @@ public class Wave implements Subject {
     private SlicerCreator slicerFactory;
     private ArrayList<Observer> observers;
     private int waveNum;
+    private ArrayList<Slicer> despawnedSlicers;
+    private int despawnIndex;
 
     public ArrayList<Slicer> getSlicers() {
         return slicers;
@@ -36,9 +39,22 @@ public class Wave implements Subject {
         this.slicersToSpawn = new LinkedList<>();
         this.slicers = new ArrayList<>();
         this.observers = new ArrayList<>();
+        this.despawnedSlicers = new ArrayList<>();
+        this.despawnIndex = 0;
         this.waveNum = waveNum;
     }
 
+    public ArrayList<Slicer> getDespawnedSlicers() {
+        return despawnedSlicers;
+    }
+
+    public int getDespawnIndex() {
+        return despawnIndex;
+    }
+
+    public void increaseDespawnIndex() {
+        this.despawnIndex++;
+    }
 
     public void update(Input input) {
         if (input.wasPressed(Keys.S) && !this.started) {
@@ -114,9 +130,37 @@ public class Wave implements Subject {
         }
 
         for (Slicer slicer : toBeDespawned) {
-            slicers.remove(slicer);
+            despawn(slicer);
         }
         return slicersOnScreen;
+    }
+
+    public void despawn(Slicer slicer) {
+        if (!slicer.getChildType().equals("none")) {
+            for (int i = 0; i < slicer.getChildAmount(); i++) {
+                Slicer childSlicer = slicerFactory.createSlicer(slicer.getChildType());
+                childSlicer.setPolyLine(slicer.getPolyLine());
+                childSlicer.setLocation(slicer.getLocation());
+                childSlicer.setNextPoint(slicer.getNextPoint());
+                childSlicer.setPointIndex(slicer.getPointIndex());
+
+                // Assign any projectiles targeting dead slicer to first child
+                if (i == 0) {
+                    ArrayList<Observer> toBeUnregistered = new ArrayList<>();
+                    for (Observer observer : slicer.getObservers()) {
+                        toBeUnregistered.add(observer);
+                        childSlicer.registerObserver(observer);
+                        childSlicer.notifyObservers();
+                    }
+                    for (Observer observer : toBeUnregistered) {
+                        slicer.unregisterObserver(observer);
+                    }
+                }
+                slicers.add(childSlicer);
+            }
+        }
+        despawnedSlicers.add(slicer);
+        slicers.remove(slicer);
     }
 
     public int getWaveIndex() {

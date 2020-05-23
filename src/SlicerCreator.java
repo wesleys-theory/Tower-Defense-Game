@@ -23,6 +23,9 @@ public class SlicerCreator {
     private static final int APEXSLICER_HEALTH = 25 * SLICER_HEALTH;
     private static final int APEXSLICER_REWARD = 150;
     private static final int APEXSLICER_PENALTY = 4 * MEGASLICER_PENALTY;
+    private static final int NUM_SUPERSLICER_CHILDREN = 2;
+    private static final int NUM_MEGASLICER_CHILDREN = 2;
+    private static final int NUM_APEXSLICER_CHILDREN = 4;
 
     public Slicer createSlicer(String slicerType) {
         Slicer slicer = new Slicer();
@@ -32,24 +35,31 @@ public class SlicerCreator {
             slicer.setHealth(SLICER_HEALTH);
             slicer.setReward(SLICER_REWARD);
             slicer.setPenalty(SLICER_PENALTY);
+            slicer.setChildType("none");
         }
         else if (slicerType.equals("superslicer")) {
             slicer.setSpeed(SUPERSLICER_SPEED);
             slicer.setHealth(SUPERSLICER_HEALTH);
             slicer.setReward(SUPERSLICER_REWARD);
             slicer.setPenalty(SUPERSLICER_PENALTY);
+            slicer.setChildType("slicer");
+            slicer.setChildAmount(NUM_SUPERSLICER_CHILDREN);
         }
         else if (slicerType.equals("megaslicer")) {
             slicer.setSpeed(MEGASLICER_SPEED);
             slicer.setHealth(MEGASLICER_HEALTH);
             slicer.setReward(MEGASLICER_REWARD);
             slicer.setPenalty(MEGASLICER_PENALTY);
+            slicer.setChildType("superslicer");
+            slicer.setChildAmount(NUM_MEGASLICER_CHILDREN);
         }
         else if (slicerType.equals("apexslicer")) {
             slicer.setSpeed(APEXSLICER_SPEED);
             slicer.setHealth(APEXSLICER_HEALTH);
             slicer.setReward(APEXSLICER_REWARD);
             slicer.setPenalty(APEXSLICER_PENALTY);
+            slicer.setChildType("megaslicer");
+            slicer.setChildAmount(NUM_APEXSLICER_CHILDREN);
         }
         List<Point> polyline = ShadowDefend.currentMap.getAllPolylines().get(0);
         slicer.setPolyLine(polyline);

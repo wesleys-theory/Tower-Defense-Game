@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
-    private final static int START_MONEY = 10000;
+    private final static int START_MONEY = 500;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
     private final static int OFFSET_FROM_RIGHT = 200;
@@ -200,6 +200,10 @@ public class BuyPanel implements Subject, Observer {
                 money += BASE_REWARD + (wave.getWaveIndex() + 1)*REWARD_MULTIPLIER;
             }
             this.slicers = wave.getSlicers();
+            for (int i = wave.getDespawnIndex(); i < wave.getDespawnedSlicers().size(); i++) {
+                money += wave.getDespawnedSlicers().get(i).getReward();
+                wave.increaseDespawnIndex();
+            }
         }
     }
 }

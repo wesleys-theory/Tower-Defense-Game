@@ -16,6 +16,28 @@ public class Slicer extends Sprite implements Subject {
     private Point nextPoint;
     private boolean isAlive;
     private ArrayList<Observer> observers = new ArrayList<>();
+    private String childType;
+    private int childAmount;
+
+    public ArrayList<Observer> getObservers() {
+        return observers;
+    }
+
+    public String getChildType() {
+        return childType;
+    }
+
+    public void setChildType(String childType) {
+        this.childType = childType;
+    }
+
+    public int getChildAmount() {
+        return childAmount;
+    }
+
+    public void setChildAmount(int childAmount) {
+        this.childAmount = childAmount;
+    }
 
     public int getPointIndex() {
         return pointIndex;
