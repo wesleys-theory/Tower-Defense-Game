@@ -155,6 +155,10 @@ public class BuyPanel implements Subject, Observer {
         }
         if (!selectedTower.blockedLocation()) {
             selectedTower.render();
+            if (selectedTower instanceof Tank) {
+                Tank tank = (Tank) selectedTower;
+                tank.drawEffectRadius();
+            }
         }
     }
 
@@ -171,6 +175,8 @@ public class BuyPanel implements Subject, Observer {
     public void reset() {
         getActiveTowers().clear();
         money = START_MONEY;
+        towerSelected = false;
+        selectedTower = null;
     }
 
     @Override

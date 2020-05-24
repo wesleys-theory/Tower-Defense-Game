@@ -40,11 +40,16 @@ public class ShadowDefend extends AbstractGame {
     @Override
     protected void update(Input input) {
         if (getCurrentLevel().levelFinished() && levelIndex + 1 == levels.size()) {
-            System.out.println("WINNER");
+            statusPanel.winnerAlert();
         }
         else if (getCurrentLevel().levelFinished()) {
             levelIndex++;
             buyPanel.reset();
+            statusPanel.reset();
+        }
+
+        if (statusPanel.getLives() < 0) {
+            Window.close();
         }
 
         getCurrentLevel().drawMap(WIDTH, HEIGHT);

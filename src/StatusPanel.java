@@ -4,6 +4,8 @@ import bagel.Image;
 import bagel.Input;
 import bagel.util.Colour;
 
+import java.util.ArrayList;
+
 public class StatusPanel implements Observer {
     private static final int START_LIVES = 25;
     private static final int FONT_SIZE = 17;
@@ -30,6 +32,18 @@ public class StatusPanel implements Observer {
         background = new Image("res/images/statuspanel.png");
         statuses = new boolean[]{false,false,false,true};
         clock = new Clock();
+    }
+
+    public void reset() {
+        this.lives = START_LIVES;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void winnerAlert() {
+        statuses[WINNER_INDEX] = true;
     }
 
     public void update(Input input) {
@@ -98,6 +112,16 @@ public class StatusPanel implements Observer {
             Wave wave = (Wave) subject;
             statuses[WAVE_INDEX] = wave.hasStarted();
             this.waveNumber = wave.getWaveIndex() + 1;
+
+            // Decrease number of lives for the slicers at the end
+            ArrayList<Slicer> processedSlicers = new ArrayList<>();
+            for (Slicer slicer : wave.getSlicersAtEnd()) {
+                this.lives -= slicer.getPenalty();
+                processedSlicers.add(slicer);
+            }
+            for (Slicer slicer : processedSlicers) {
+                wave.removeSlicerAtEnd(slicer);
+            }
         }
         else if (subject instanceof BuyPanel) {
             BuyPanel buyPanel = (BuyPanel) subject;

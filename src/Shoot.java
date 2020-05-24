@@ -12,7 +12,8 @@ public class Shoot extends Ability {
         this.projectiles = new ArrayList<>();
         this.setCooldownBehaviour(new RegularCooldown());
         this.setCooldown(delay);
-        this.getCooldownBehaviour().generateCooldown(getCooldown());
+        // Makes the first shot instantaneous
+        this.getCooldownBehaviour().generateCooldown(0);
     }
 
     @Override

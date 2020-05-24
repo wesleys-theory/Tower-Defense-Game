@@ -12,17 +12,19 @@ public class SlicerCreator {
     private static final double SUPERSLICER_SPEED = 3.0/4 * SLICER_SPEED;
     private static final int SUPERSLICER_HEALTH = SLICER_HEALTH;
     private static final int SUPERSLICER_REWARD = 15;
-    private static final int SUPERSLICER_PENALTY = 2 * SLICER_PENALTY;
+    // All units are broken down into slicers before calculating penalties.
+    private static final int SUPERSLICER_PENALTY = 0;
 
     private static final double MEGASLICER_SPEED = SUPERSLICER_SPEED;
     private static final int MEGASLICER_HEALTH = 2 * SLICER_HEALTH;
     private static final int MEGASLICER_REWARD = 10;
-    private static final int MEGASLICER_PENALTY = 2 * SUPERSLICER_PENALTY;
+    private static final int MEGASLICER_PENALTY = 0;
 
     private static final double APEXSLICER_SPEED = 1.0/2 * MEGASLICER_SPEED;
     private static final int APEXSLICER_HEALTH = 25 * SLICER_HEALTH;
     private static final int APEXSLICER_REWARD = 150;
-    private static final int APEXSLICER_PENALTY = 4 * MEGASLICER_PENALTY;
+    private static final int APEXSLICER_PENALTY = 0;
+
     private static final int NUM_SUPERSLICER_CHILDREN = 2;
     private static final int NUM_MEGASLICER_CHILDREN = 2;
     private static final int NUM_APEXSLICER_CHILDREN = 4;

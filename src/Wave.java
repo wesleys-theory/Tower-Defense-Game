@@ -19,6 +19,7 @@ public class Wave implements Subject {
     private int waveNum;
     private ArrayList<Slicer> despawnedSlicers;
     private int despawnIndex;
+    private ArrayList<Slicer> slicersAtEnd;
 
     public ArrayList<Slicer> getSlicers() {
         return slicers;
@@ -42,6 +43,15 @@ public class Wave implements Subject {
         this.despawnedSlicers = new ArrayList<>();
         this.despawnIndex = 0;
         this.waveNum = waveNum;
+        this.slicersAtEnd = new ArrayList<>();
+    }
+
+    public ArrayList<Slicer> getSlicersAtEnd() {
+        return slicersAtEnd;
+    }
+
+    public void removeSlicerAtEnd(Slicer slicer) {
+        this.slicersAtEnd.remove(slicer);
     }
 
     public ArrayList<Slicer> getDespawnedSlicers() {
@@ -120,6 +130,10 @@ public class Wave implements Subject {
         for (Slicer slicer : slicers) {
             if (!slicer.atEnd()) {
                 slicersOnScreen = true;
+            }
+            else if (slicer.atEnd() && slicer.getHealth() > 0) {
+                slicersAtEnd.add(slicer);
+                toBeDespawned.add(slicer);
             }
             if (slicer.getHealth() <= 0) {
                 toBeDespawned.add(slicer);
