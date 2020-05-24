@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
-    private final static int START_MONEY = 500;
+    private final static int START_MONEY = 100000;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
     private final static int OFFSET_FROM_RIGHT = 200;
@@ -35,6 +35,7 @@ public class BuyPanel implements Subject, Observer {
     private TowerCreator towerCreator;
     private ArrayList<Observer> observers;
     private ArrayList<Slicer> slicers;
+    private boolean invalidPlacement;
 
     public ArrayList<Tower> getActiveTowers() {
         return activeTowers;
@@ -54,6 +55,7 @@ public class BuyPanel implements Subject, Observer {
         this.towerCreator = new TowerCreator();
         this.observers = new ArrayList<>();
         this.slicers = new ArrayList<>();
+        this.invalidPlacement = false;
 
         money = START_MONEY;
         background = new Image("res/images/buypanel.png");
@@ -125,11 +127,23 @@ public class BuyPanel implements Subject, Observer {
                 return;
             }
         }
+        // Check if selected tower is on top of any active towers
+        invalidPlacement = false;
+        if (towerSelected) {
+            for (Tower tower : activeTowers) {
+                if (tower.getImage().getBoundingBoxAt(tower.getLocation()).intersects(
+                        selectedTower.getImage().getBoundingBoxAt(selectedTower.getLocation()))) {
+                            invalidPlacement = true;
+                }
+            }
+        }
+
         if (towerSelected && input.wasPressed(MouseButtons.RIGHT)) {
             towerSelected = false;
             selectedTower = null;
         }
-        else if (towerSelected && input.wasPressed(MouseButtons.LEFT) && !selectedTower.blockedLocation()) {
+        else if (towerSelected && input.wasPressed(MouseButtons.LEFT) && !selectedTower.blockedLocation()
+                    && !invalidPlacement) {
             activeTowers.add(selectedTower);
             money -= selectedTower.getCost();
             towerSelected = false;
@@ -150,10 +164,10 @@ public class BuyPanel implements Subject, Observer {
 
 
     public void drawSelected() {
-        if (!towerSelected ) {
+        if (!towerSelected) {
             return;
         }
-        if (!selectedTower.blockedLocation()) {
+        if (!selectedTower.blockedLocation() && !invalidPlacement) {
             selectedTower.render();
             if (selectedTower instanceof Tank) {
                 Tank tank = (Tank) selectedTower;
