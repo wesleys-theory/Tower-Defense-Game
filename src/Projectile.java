@@ -1,7 +1,7 @@
 import bagel.util.Point;
 import bagel.util.Vector2;
 
-public class Projectile extends Sprite implements Observer{
+public class Projectile extends Sprite implements Observer {
     private static final double PROJECTILE_SPEED = 10;
     private int damage;
     private Point targetLocation;
@@ -28,6 +28,7 @@ public class Projectile extends Sprite implements Observer{
         this.damage = damage;
     }
 
+    @Override
     public void move() {
         Vector2 directionVector;
         directionVector = this.targetLocation.asVector().sub(this.getLocation().asVector()).normalised();

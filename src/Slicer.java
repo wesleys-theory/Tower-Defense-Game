@@ -98,6 +98,8 @@ public class Slicer extends Sprite implements Subject {
         isAlive = alive;
     }
 
+
+    @Override
     public void move() {
         // Moves the enemy in the direction of the current velocity a distance of speed pixels. timeMultiplier
         // specifies the number of repetitions to perform.

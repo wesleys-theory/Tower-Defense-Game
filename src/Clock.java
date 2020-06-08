@@ -1,17 +1,36 @@
 import bagel.Input;
 import bagel.Keys;
 
+import java.awt.*;
+
 public class Clock {
     private static final int BASE_MULTIPLIER = 1;
-    private static final int MAX_MULTIPLIER = 20;
-    public static final int refreshRate = 144;
+    private static final int MAX_MULTIPLIER = 5;
+    // refreshRate set to 60 by default. Should dynamically adjust, if program is not working, disable the call to
+    // 'determineRefreshRate()' in constructor
+    public static int refreshRate = 60;
 
     public static int timeMultiplier = BASE_MULTIPLIER;
     private boolean timerFinished;
     private int timeCount;
-    private int delay;
+    private double delay;
 
-    public void setDelay(int delay) {
+
+    public Clock() {
+        // Disable this if timings are strange
+        determineRefreshRate();
+    }
+
+    public void determineRefreshRate() {
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = environment.getScreenDevices()[0];
+        int rate = device.getDisplayMode().getRefreshRate();
+        if (rate != DisplayMode.REFRESH_RATE_UNKNOWN) {
+            refreshRate = rate;
+        }
+    }
+
+    public void setDelay(double delay) {
         this.delay = delay;
     }
 
@@ -20,7 +39,7 @@ public class Clock {
     }
 
     public void beginCountdown() {
-        timeCount = (int) ((double)delay/1000 * refreshRate);
+        timeCount = (int) (delay/1000 * refreshRate);
         timerFinished = false;
     }
 

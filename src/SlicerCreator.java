@@ -4,7 +4,7 @@ import bagel.util.Point;
 import java.util.List;
 
 public class SlicerCreator {
-    private static final double SLICER_SPEED = Slicer.baseSpeed;
+    private static final double SLICER_SPEED = 2;
     private static final int SLICER_HEALTH = 1;
     private static final int SLICER_REWARD = 2;
     private static final int SLICER_PENALTY = 1;

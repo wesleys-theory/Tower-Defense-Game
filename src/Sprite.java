@@ -64,6 +64,8 @@ public abstract class Sprite {
         this.image.draw(this.location.x, this.location.y, new DrawOptions().setRotation(getAngle()));
     }
 
+    public void move() {}
+
     public boolean blockedLocation() {
         if (this.getLocation().x >= ShadowDefend.WIDTH | this.getLocation().y >= ShadowDefend.HEIGHT) {
             return true;

@@ -30,7 +30,6 @@ public class ShadowDefend extends AbstractGame {
         buyPanel = new BuyPanel();
         statusPanel = new StatusPanel();
         buyPanel.registerObserver(statusPanel);
-
     }
 
     public static void main(String[] args) throws Exception {

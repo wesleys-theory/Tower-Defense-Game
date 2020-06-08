@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
-    private final static int START_MONEY = 100000;
+    private final static int START_MONEY = 500;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
     private final static int OFFSET_FROM_RIGHT = 200;
@@ -22,6 +22,7 @@ public class BuyPanel implements Subject, Observer {
     private final static int KEYBIND_OFFSET = 30;
     private static final int REWARD_MULTIPLIER = 100;
     private static final int BASE_REWARD = 150;
+    private static final int STATUS_HEIGHT = 25;
 
     private int money;
     private ArrayList<Tower> purchaseItems;
@@ -75,7 +76,7 @@ public class BuyPanel implements Subject, Observer {
         purchaseItems.add(towerPrototype);
 
         towerPrototype = towerFactory.makeTower("airplane");
-        towerPrototype.setLocation((new Point(OFFSET_FROM_LEFT +2* TOWER_GAP, height)));
+        towerPrototype.setLocation((new Point(OFFSET_FROM_LEFT + 2* TOWER_GAP, height)));
         purchaseItems.add(towerPrototype);
     }
 
@@ -138,12 +139,23 @@ public class BuyPanel implements Subject, Observer {
             }
         }
 
+        // Check if selected tower intersects a panel
+        if (towerSelected) {
+            if (selectedTower.getLocation().y > ShadowDefend.HEIGHT - STATUS_HEIGHT ||
+                    selectedTower.getLocation().y < background.getHeight()) {
+                invalidPlacement = true;
+            }
+        }
+
         if (towerSelected && input.wasPressed(MouseButtons.RIGHT)) {
             towerSelected = false;
             selectedTower = null;
         }
         else if (towerSelected && input.wasPressed(MouseButtons.LEFT) && !selectedTower.blockedLocation()
                     && !invalidPlacement) {
+            if (selectedTower instanceof Airplane) {
+                ((Airplane) selectedTower).placeAtStart();
+            }
             activeTowers.add(selectedTower);
             money -= selectedTower.getCost();
             towerSelected = false;
@@ -155,10 +167,23 @@ public class BuyPanel implements Subject, Observer {
     }
 
     public void drawActiveTowers() {
+        ArrayList<Tower> toBeRemoved = new ArrayList<>();
+
         for (Tower tower : activeTowers) {
             tower.getAbility().performAbility(slicers, tower);
             tower.getAbility().getCooldownBehaviour().updateCooldown();
+            tower.move();
             tower.render();
+            // Check for air support being at the end of its run
+            if (tower instanceof Airplane) {
+               if (((Airplane) tower).atEnd() && ((Airplane) tower).bombsDetonated()) {
+                   toBeRemoved.add(tower);
+               }
+            }
+        }
+        // Remove any airplanes that have finished their run
+        for (Tower tower : toBeRemoved) {
+            activeTowers.remove(tower);
         }
     }
 
@@ -221,7 +246,9 @@ public class BuyPanel implements Subject, Observer {
             }
             this.slicers = wave.getSlicers();
             for (int i = wave.getDespawnIndex(); i < wave.getDespawnedSlicers().size(); i++) {
-                money += wave.getDespawnedSlicers().get(i).getReward();
+                if (wave.getDespawnedSlicers().get(i).getHealth() <= 0) {
+                    money += wave.getDespawnedSlicers().get(i).getReward();
+                }
                 wave.increaseDespawnIndex();
             }
         }
