@@ -6,6 +6,15 @@ public class Projectile extends Sprite implements Observer {
     private int damage;
     private Point targetLocation;
     private Slicer slicer;
+    private boolean lonely = false;
+
+    public void makeLonely() {
+        lonely = true;
+    }
+
+    public boolean isLonely() {
+        return lonely;
+    }
 
     public Slicer getSlicer() {
         return slicer;

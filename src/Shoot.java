@@ -25,6 +25,7 @@ public class Shoot extends Ability {
             double angle = Math.atan2(directionVector.x, -1 * directionVector.y);
             user.setAngle(angle);
         }
+
         if (getCooldownBehaviour().offCooldown() && target != null) {
             Projectile newProjectile = projectileCreator.makeProjectile(client.getType());
             newProjectile.setLocation(client.getLocation());
@@ -33,10 +34,17 @@ public class Shoot extends Ability {
             target.notifyObservers();
             getCooldownBehaviour().generateCooldown(getCooldown());
         }
+
         ArrayList<Projectile> toBeRemoved = new ArrayList<>();
         for (Projectile projectile : projectiles) {
+            // Delete the lonely projectiles
+            if (projectile.isLonely()) {
+                toBeRemoved.add(projectile);
+            }
+
             projectile.render();
             projectile.move();
+
             if (projectile.getLocation().distanceTo(projectile.getTargetLocation()) < projectile.getSpeed()) {
                toBeRemoved.add(projectile);
                projectile.getSlicer().reduceHealth(projectile.getDamage());

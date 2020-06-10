@@ -99,7 +99,7 @@ public class Wave implements Subject {
             String slicerType = ((SpawnEvent) this.currentEvent).getSlicerType();
 
             for (int i = 0; i < numToSpawn; i++) {
-                slicersToSpawn.add(slicerFactory.createSlicer(slicerType));
+                slicersToSpawn.add(slicerFactory.createSlicer(SlicerType.valueOf(slicerType.toUpperCase())));
             }
             currentEvent.getClock().setDelay(delay);
             currentEvent.getClock().beginCountdown();
@@ -150,7 +150,7 @@ public class Wave implements Subject {
     }
 
     public void despawn(Slicer slicer) {
-        if (!slicer.getChildType().equals("none")) {
+        if (slicer.getChildType() != null) {
             for (int i = 0; i < slicer.getChildAmount(); i++) {
                 Slicer childSlicer = slicerFactory.createSlicer(slicer.getChildType());
                 childSlicer.setPolyLine(slicer.getPolyLine());
@@ -171,6 +171,14 @@ public class Wave implements Subject {
                     }
                 }
                 slicers.add(childSlicer);
+            }
+        }
+        // No children, lonely projectile is marked for deletion
+        else {
+            for (Observer observer : slicer.getObservers()) {
+                if (observer instanceof Projectile) {
+                    ((Projectile) observer).makeLonely();
+                }
             }
         }
         despawnedSlicers.add(slicer);
