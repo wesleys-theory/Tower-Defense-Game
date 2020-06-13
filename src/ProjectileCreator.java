@@ -5,6 +5,12 @@ public class ProjectileCreator {
     private static final int SUPERTANK_DAMAGE = 3*TANK_DAMAGE;
 
 
+    /**
+     * Projectile creation logic - either creates a regular tank projectile or a super tank projectile, assigning
+     * relevant values such as damage and images
+     * @param projectileType tank projectile or supertank projectile
+     * @return the fresh projectile
+     */
     public Projectile makeProjectile(String projectileType) {
         Projectile newProjectile = new Projectile();
         if (projectileType.equals("tank")) {

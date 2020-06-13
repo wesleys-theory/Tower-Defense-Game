@@ -18,6 +18,11 @@ public class Level {
         return levelComplete;
     }
 
+    /**
+     * Level constructor
+     * @param mapPath the path for the map.tmx file
+     * @param wavePath the path for the wave.txt file
+     */
     public Level(String mapPath, String wavePath) {
         map = new TiledMap(mapPath);
         this.levelComplete = false;
@@ -53,25 +58,47 @@ public class Level {
         }
     }
 
+    /**
+     * Draws the map to the window
+     * @param width width of the window
+     * @param height height of the window
+     */
     public void drawMap(int width, int height) {
         map.draw(0,0,0,0, width, height);
     }
 
+    /**
+     * Map object getter so the slicers know what's up
+     * @return a map
+     */
     public TiledMap getMap() {
         return map;
     }
 
+    /**
+     * Updates level tings like wave index and whether the level has finished or not
+     * @param input user input
+     */
     public void update(Input input) {
         if (waves.get(waveIndex).isFinished() && waveIndex + 1 == waves.size() - 1) {
             levelComplete = true;
             return;
         }
         else if (waves.get(waveIndex).isFinished()) {
+            // Ensures that each slicer has been despawned properly before moving on to the next wave
+            while (!waves.get(waveIndex).getSlicers().isEmpty()) {
+                waves.get(waveIndex).update(input);
+            }
+
             waveIndex++;
         }
         waves.get(waveIndex).update(input);
     }
 
+    /**
+     * Getter for the current wave object
+     * @return current wave object
+     */
     public Wave getWave() {
         return this.waves.get(waveIndex);
     }

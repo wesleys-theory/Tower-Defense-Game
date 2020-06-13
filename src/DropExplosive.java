@@ -5,6 +5,10 @@ public class DropExplosive extends Ability {
 
     private ArrayList<Explosive> explosives;
 
+    /**
+     * Constructor for the "DropExplosive" ability
+     * @param range range for the cooldown
+     */
     public DropExplosive(int range) {
         this.setCooldownBehaviour(new RandomCooldown(range));
         this.setCooldown(range);
@@ -12,6 +16,11 @@ public class DropExplosive extends Ability {
         this.explosives = new ArrayList<>();
     }
 
+    /**
+     * Logic for dropping bombs off cooldown and exploding any bombs previously dropped
+     * @param slicers the list of slicers in the game
+     * @param user the tower using the ability
+     */
     @Override
     public void performAbility(ArrayList<Slicer> slicers, Tower user) {
         ArrayList<Explosive> toBeRemoved = new ArrayList<>();
@@ -34,6 +43,10 @@ public class DropExplosive extends Ability {
         }
     }
 
+    /**
+     * used for determining whether a plane is ready to be removed from the game or not
+     * @return a boolean value
+     */
     public boolean explosiveListEmpty() {
         return explosives.isEmpty();
     }

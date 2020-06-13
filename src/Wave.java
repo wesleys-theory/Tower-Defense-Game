@@ -46,26 +46,49 @@ public class Wave implements Subject {
         this.slicersAtEnd = new ArrayList<>();
     }
 
+    /**
+     * Getter for the list of slicers at the end of the map
+     * @return the list of slicers at the end of their polyline
+     */
     public ArrayList<Slicer> getSlicersAtEnd() {
         return slicersAtEnd;
     }
 
+    /**
+     * removes a given slicer from the list of slicersAtEnd
+     * @param slicer slicer to be removed
+     */
     public void removeSlicerAtEnd(Slicer slicer) {
         this.slicersAtEnd.remove(slicer);
     }
 
+    /**
+     * Getter for list of despawned slicers
+     * @return the list of despawned slicers
+     */
     public ArrayList<Slicer> getDespawnedSlicers() {
         return despawnedSlicers;
     }
 
+    /**
+     * Getter for despawn index
+     * @return the index of the despawned slicer list
+     */
     public int getDespawnIndex() {
         return despawnIndex;
     }
 
+    /**
+     * Increases the index for the list of despawned slicers
+     */
     public void increaseDespawnIndex() {
         this.despawnIndex++;
     }
 
+    /**
+     * Updates the state of the wave, starts it if it hasn't been already started
+     * @param input user input
+     */
     public void update(Input input) {
         if (input.wasPressed(Keys.S) && !this.started) {
             this.started = true;
@@ -78,10 +101,17 @@ public class Wave implements Subject {
         notifyObservers();
     }
 
+    /**
+     * Adds an event to the Wave's agenda
+     * @param event event
+     */
     public void addEvent(WaveEvent event) {
         this.waveEvents.add(event);
     }
 
+    /**
+     * Starts the next event in the event queue if the previous event had finished
+     */
     public void startNextEvent() {
         if (waveEvents.isEmpty() && !slicersOnScreen) {
             this.finished = true;
@@ -110,6 +140,10 @@ public class Wave implements Subject {
         }
     }
 
+    /**
+     * Updates all the slicers on the screen
+     * @return whether there are still any slicers on screen or not
+     */
     public boolean updateEvent() {
         if (currentEvent instanceof SpawnEvent) {
             if (currentEvent.getClock().timerFinished()) {
@@ -149,8 +183,13 @@ public class Wave implements Subject {
         return slicersOnScreen;
     }
 
+    /**
+     * Despawns a given slicer in the list of active slicers
+     * @param slicer slicer to be despawned
+     */
     public void despawn(Slicer slicer) {
         if (slicer.getChildType() != null) {
+            // Spawn the child slicers
             for (int i = 0; i < slicer.getChildAmount(); i++) {
                 Slicer childSlicer = slicerFactory.createSlicer(slicer.getChildType());
                 childSlicer.setPolyLine(slicer.getPolyLine());

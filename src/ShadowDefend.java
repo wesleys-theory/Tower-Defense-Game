@@ -4,6 +4,7 @@ import bagel.map.TiledMap;
 import java.util.ArrayList;
 
 // ShadowDefend game for SWEN20003, implemented by Nelson Walker
+// Assumes a refresh rate of 60hz, see Clock.java
 
 
 public class ShadowDefend extends AbstractGame {

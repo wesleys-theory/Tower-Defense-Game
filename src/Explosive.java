@@ -11,6 +11,10 @@ public class Explosive extends Sprite {
 
     private CooldownBehaviour cooldownBehaviour;
 
+    /**
+     * Explosive constructor
+     * @param location the point where it lives
+     */
     public Explosive(Point location) {
         this.cooldownBehaviour = new RegularCooldown();
         this.cooldownBehaviour.generateCooldown(DETONATION_TIME);
@@ -18,14 +22,25 @@ public class Explosive extends Sprite {
         this.setLocation(location);
     }
 
+    /**
+     * updates the "fuse" on the explosive
+     */
     public void updateCooldown() {
         this.cooldownBehaviour.updateCooldown();
     }
 
+    /**
+     * Determines if the explosive timer has finished or not
+     * @return a true or false
+     */
     public boolean timerDone() {
         return cooldownBehaviour.offCooldown();
     }
 
+    /**
+     * "Explosion" logic; damages nearby slicers
+     * @param slicers slicers on the screen
+     */
     public void explode(ArrayList<Slicer> slicers) {
         for (Slicer slicer : slicers) {
             if (getLocation().distanceTo(slicer.getLocation()) <= EFFECT_RADIUS) {

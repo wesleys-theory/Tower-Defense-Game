@@ -19,90 +19,12 @@ public class Slicer extends Sprite implements Subject {
     private SlicerType childType;
     private int childAmount;
 
-    public ArrayList<Observer> getObservers() {
-        return observers;
-    }
-
-    public SlicerType getChildType() {
-        return childType;
-    }
-
-    public void setChildType(SlicerType childType) {
-        this.childType = childType;
-    }
-
-    public int getChildAmount() {
-        return childAmount;
-    }
-
-    public void setChildAmount(int childAmount) {
-        this.childAmount = childAmount;
-    }
-
-    public int getPointIndex() {
-        return pointIndex;
-    }
-
-    public void setPointIndex(int pointIndex) {
-        this.pointIndex = pointIndex;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-    public void reduceHealth(int amount) {
-        this.health -= amount;
-    }
-
-    public int getReward() {
-        return reward;
-    }
-
-    public void setReward(int reward) {
-        this.reward = reward;
-    }
-
-    public int getPenalty() {
-        return penalty;
-    }
-
-    public void setPenalty(int penalty) {
-        this.penalty = penalty;
-    }
-
-    public List<Point> getPolyLine() {
-        return polyLine;
-    }
-
-    public void setPolyLine(List<Point> polyLine) {
-        this.polyLine = polyLine;
-    }
-
-    public Point getNextPoint() {
-        return nextPoint;
-    }
-
-    public void setNextPoint(Point nextPoint) {
-        this.nextPoint = nextPoint;
-    }
-
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
-
+    /**
+     * Moves the enemy in the direction of the current velocity a distance of speed pixels. timeMultiplier
+     * specifies the number of repetitions to perform.
+     */
     @Override
     public void move() {
-        // Moves the enemy in the direction of the current velocity a distance of speed pixels. timeMultiplier
-        // specifies the number of repetitions to perform.
 
         for (int i=0; i<Clock.timeMultiplier; i++) {
 
@@ -120,13 +42,16 @@ public class Slicer extends Sprite implements Subject {
             this.setDirection(directionVector.normalised());
             this.setAngle(Math.atan2(this.getDirection().y, this.getDirection().x));
             this.setLocation(new Point(this.getLocation().x + this.getSpeed()*this.getDirection().x,
-                                        this.getLocation().y + this.getSpeed()*this.getDirection().y));
+                    this.getLocation().y + this.getSpeed()*this.getDirection().y));
         }
     }
 
 
+    /**
+     * Checks if the enemy is at the last polyline
+     * @return true or false
+     */
     public boolean atEnd() {
-        // Checks if the enemy is at the last polyline
 
         int endIndex = this.polyLine.size() - 1;
         return (this.getLocation().asVector().sub(this.polyLine.get(endIndex).asVector()).length() < baseSpeed);
@@ -149,5 +74,149 @@ public class Slicer extends Sprite implements Subject {
         for (Observer observer : observers) {
             observer.update(this);
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Observer> getObservers() {
+        return observers;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public SlicerType getChildType() {
+        return childType;
+    }
+
+    /**
+     *
+     * @param childType
+     */
+    public void setChildType(SlicerType childType) {
+        this.childType = childType;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getChildAmount() {
+        return childAmount;
+    }
+
+    /**
+     *
+     * @param childAmount
+     */
+    public void setChildAmount(int childAmount) {
+        this.childAmount = childAmount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getPointIndex() {
+        return pointIndex;
+    }
+
+    /**
+     *
+     * @param pointIndex
+     */
+    public void setPointIndex(int pointIndex) {
+        this.pointIndex = pointIndex;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     *
+     * @param health
+     */
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    /**
+     *
+     * @param amount
+     */
+    public void reduceHealth(int amount) {
+        this.health -= amount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getReward() {
+        return reward;
+    }
+
+    /**
+     *
+     * @param reward
+     */
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getPenalty() {
+        return penalty;
+    }
+
+    /**
+     *
+     * @param penalty
+     */
+    public void setPenalty(int penalty) {
+        this.penalty = penalty;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Point> getPolyLine() {
+        return polyLine;
+    }
+
+    /**
+     *
+     * @param polyLine
+     */
+    public void setPolyLine(List<Point> polyLine) {
+        this.polyLine = polyLine;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Point getNextPoint() {
+        return nextPoint;
+    }
+
+    /**
+     *
+     * @param nextPoint
+     */
+    public void setNextPoint(Point nextPoint) {
+        this.nextPoint = nextPoint;
     }
 }

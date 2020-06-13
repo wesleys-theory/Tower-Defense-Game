@@ -20,12 +20,15 @@ public class StatusPanel implements Observer {
     private static final int PLACING_INDEX = 1;
     private static final int WINNER_INDEX = 0;
 
-    private boolean statuses[];
+    private boolean[] statuses;
     private int waveNumber;
     private int lives;
     private Image background;
     private Clock clock;
 
+    /**
+     * Status panel constructor
+     */
     public StatusPanel() {
         waveNumber = 0;
         lives = START_LIVES;
@@ -34,22 +37,39 @@ public class StatusPanel implements Observer {
         clock = new Clock();
     }
 
+    /**
+     * Resets the status panel for the next level
+     */
     public void reset() {
         this.lives = START_LIVES;
     }
 
+    /**
+     *
+     * @return the lives
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * Sets the "winner" status to true
+     */
     public void winnerAlert() {
         statuses[WINNER_INDEX] = true;
     }
 
+    /**
+     * updates the time multiplier
+     * @param input k for slower l for faster
+     */
     public void update(Input input) {
         clock.updateMultiplier(input);
     }
 
+    /**
+     * Renders the status panel to the screen
+     */
     public void render() {
         double y_location = ShadowDefend.HEIGHT - background.getHeight()/2;
         double x_location = background.getWidth()/2;
@@ -60,11 +80,17 @@ public class StatusPanel implements Observer {
         drawLives();
     }
 
+    /**
+     * Writes the wave number to the screen
+     */
     public void drawWave() {
         font.drawString(String.format("Wave: %d", waveNumber), OFFSET_FROM_LEFT,
                 HEIGHT);
     }
 
+    /**
+     * Draws the time multiplier to the screen
+     */
     public void drawTimeScale() {
         Colour colour;
         if (Clock.timeMultiplier > 1) {
@@ -77,6 +103,9 @@ public class StatusPanel implements Observer {
                 new DrawOptions().setBlendColour(colour));
     }
 
+    /**
+     * Draws the status to the screen by checking for important statuses first
+     */
     public void drawStatus() {
         String string = "Status: ";
         int index = 0;
@@ -101,11 +130,18 @@ public class StatusPanel implements Observer {
         font.drawString(string, STATUS_X, HEIGHT);
     }
 
+    /**
+     * Draws the number of lives left to the status panel
+     */
     public void drawLives() {
         String string = String.format("Lives: %d", lives);
         font.drawString(string, LIVES_X, HEIGHT);
     }
 
+    /**
+     * Updates the status panel by looking at the current wave and buy panel
+     * @param subject a reference to the subject
+     */
     @Override
     public void update(Subject subject) {
         if (subject instanceof Wave) {

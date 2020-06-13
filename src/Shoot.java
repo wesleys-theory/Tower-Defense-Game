@@ -7,6 +7,10 @@ public class Shoot extends Ability {
     private ArrayList<Projectile> projectiles;
     private ProjectileCreator projectileCreator;
 
+    /**
+     * "Shoot" ability constructor
+     * @param delay the delay for cooldown
+     */
     public Shoot(int delay) {
         this.projectileCreator = new ProjectileCreator();
         this.projectiles = new ArrayList<>();
@@ -16,6 +20,11 @@ public class Shoot extends Ability {
         this.getCooldownBehaviour().generateCooldown(0);
     }
 
+    /**
+     * If the ability is off cooldown and a slicer is in range, then a "shoot" action is performed
+     * @param slicers the list of slicers in the game
+     * @param user the tower using the ability
+     */
     @Override
     public void performAbility(ArrayList<Slicer> slicers, Tower user) {
         Tank client = (Tank) user;
@@ -55,6 +64,12 @@ public class Shoot extends Ability {
         }
     }
 
+    /**
+     * Selects the best slicer to target for the given tank
+     * @param slicers the slicers on the screen
+     * @param user the tank that is shooting
+     * @return the target slicer
+     */
     public Slicer chooseTarget(ArrayList<Slicer> slicers, Tank user) {
         // Target selected will be the slicer that is furthest along the path, provided it is within the tank radius
         double maxDistance = user.getEffectRadius();

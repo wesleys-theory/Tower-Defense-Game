@@ -33,6 +33,11 @@ public abstract class WaveEvent implements Comparable<WaveEvent>{
         this.clock = clock;
     }
 
+    /**
+     * used to sort the wave events, probably not needed since they are given in the correct order anyway
+     * @param waveEvent the wave event to be compared to
+     * @return greater than, equal, or less than
+     */
     @Override
     public int compareTo(WaveEvent waveEvent) {
         return Integer.compare(this.waveNumber, waveEvent.waveNumber);

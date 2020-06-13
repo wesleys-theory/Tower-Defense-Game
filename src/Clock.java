@@ -16,11 +16,17 @@ public class Clock {
     private double delay;
 
 
+    /**
+     * Clock constructor
+     */
     public Clock() {
         // Disable this if timings are strange
         determineRefreshRate();
     }
 
+    /**
+     * Attempts to dynamically determine the refresh rate of the system
+     */
     public void determineRefreshRate() {
         GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = environment.getScreenDevices()[0];
@@ -30,19 +36,34 @@ public class Clock {
         }
     }
 
+    /**
+     * "delay" setter used for any time driven events
+     * @param delay the desired time in ms
+     */
     public void setDelay(double delay) {
         this.delay = delay;
     }
 
+    /**
+     * Returns whether the timer has finished or not
+     * @return boolean value
+     */
     public boolean timerFinished() {
         return timerFinished;
     }
 
+    /**
+     * Converts the delay from ms to number of ticks and updates the timeCount
+     */
     public void beginCountdown() {
         timeCount = (int) (delay/1000 * refreshRate);
         timerFinished = false;
     }
 
+    /**
+     * Every clock runs on the same time multiplier, updates time multiplier depending on input
+     * @param input l for faster, k for slower
+     */
     public void updateMultiplier(Input input) {
         if (input.wasPressed(Keys.L) && timeMultiplier < MAX_MULTIPLIER) {
             timeMultiplier++;
@@ -52,6 +73,9 @@ public class Clock {
         }
     }
 
+    /**
+     * Removes timeMultipler ticks from the timeCount
+     */
     public void updateTimer() {
         timeCount -= timeMultiplier;
         if (timeCount <= 0) {

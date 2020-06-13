@@ -14,6 +14,11 @@ public class TowerCreator {
 
     private boolean prevWasHorizontal = false;
 
+    /**
+     * Creator of towers depending on the towertype input
+     * @param towerType a string - "tank", "supertank", "airplane"
+     * @return a reference to the fresh tower
+     */
     public Tower makeTower(String towerType) {
         Tower newTower;
         if (towerType.equals("tank")) {

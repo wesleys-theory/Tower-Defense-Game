@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BuyPanel implements Subject, Observer {
 
     private final static String FONT_LOCATION = "res/fonts/DejaVuSans-Bold.ttf";
-    private final static int START_MONEY = 500000;
+    private final static int START_MONEY = 500;
     private final static int OFFSET_FROM_LEFT = 64;
     private final static int OFFSET_FROM_CENTRE = 10;
     private final static int OFFSET_FROM_RIGHT = 200;
@@ -38,14 +38,25 @@ public class BuyPanel implements Subject, Observer {
     private ArrayList<Slicer> slicers;
     private boolean invalidPlacement;
 
+    /**
+     * Getter for the towers that are in play
+     * @return a list of active towers
+     */
     public ArrayList<Tower> getActiveTowers() {
         return activeTowers;
     }
 
+    /**
+     * determines whether a tower is currently being placed or not
+     * @return true or false
+     */
     public boolean placing() {
         return towerSelected;
     }
 
+    /**
+     * BuyPanel constructor - initialises all relevant values and purchase items
+     */
     public BuyPanel() {
         this.costFont = new Font(FONT_LOCATION, COST_SIZE);
         this.moneyFont = new Font(FONT_LOCATION, MONEY_SIZE);
@@ -80,6 +91,9 @@ public class BuyPanel implements Subject, Observer {
         purchaseItems.add(towerPrototype);
     }
 
+    /**
+     * Renders the buypanel to the screen
+     */
     public void render() {
         double y_location = background.getHeight()/2;
         double x_location = background.getWidth()/2;
@@ -89,6 +103,9 @@ public class BuyPanel implements Subject, Observer {
         drawKeyBinds();
     }
 
+    /**
+     * renders each "purchaseable" item in the Buy Panel
+     */
     public void drawPurchaseItems() {
         Colour colour;
         for (Tower tower : purchaseItems) {
@@ -107,16 +124,27 @@ public class BuyPanel implements Subject, Observer {
         }
     }
 
+    /**
+     * Draws the remaining money in the Buy Panel
+     */
     public void drawMoney() {
         String output = String.format("$%d", money);
         moneyFont.drawString(output, ShadowDefend.WIDTH - OFFSET_FROM_RIGHT, OFFSET_FROM_TOP);
     }
 
+    /**
+     * Draws the key binds for the Buy Panel
+     */
     public void drawKeyBinds() {
         String output = "Key binds:\n\nS - Start Wave\nL - Increase Timescale\nK - Decrease Timescale";
         keyBindFont.drawString(output, background.getWidth()/2 - KEYBIND_OFFSET, KEYBIND_HEIGHT);
     }
 
+    /**
+     * Logic for purchasing items, checks whether a purchase item is selected, and draws it at the mouse location.
+     * Creates a new tower if a tower is selected and the user clicks on a valid location
+     * @param input user input
+     */
     public void checkPurchase(Input input) {
 
         for (Tower tower:purchaseItems) {
@@ -166,6 +194,9 @@ public class BuyPanel implements Subject, Observer {
         }
     }
 
+    /**
+     * Renders the towers in play to the screen and removes any planes that are finished
+     */
     public void drawActiveTowers() {
         ArrayList<Tower> toBeRemoved = new ArrayList<>();
 
@@ -188,6 +219,9 @@ public class BuyPanel implements Subject, Observer {
     }
 
 
+    /**
+     * Draws the selected tower to the mouse location
+     */
     public void drawSelected() {
         if (!towerSelected) {
             return;
@@ -201,6 +235,10 @@ public class BuyPanel implements Subject, Observer {
         }
     }
 
+    /**
+     * Updates the game state for towers/purchases
+     * @param input user input
+     */
     public void update(Input input) {
         drawMoney();
         drawKeyBinds();
@@ -211,6 +249,9 @@ public class BuyPanel implements Subject, Observer {
         notifyObservers();
     }
 
+    /**
+     * Clears Buy Panel for the next level
+     */
     public void reset() {
         getActiveTowers().clear();
         money = START_MONEY;
@@ -218,6 +259,10 @@ public class BuyPanel implements Subject, Observer {
         selectedTower = null;
     }
 
+    /**
+     * Subscribes an observer, e.g. the status panel
+     * @param observer an observer
+     */
     @Override
     public void registerObserver(Observer observer) {
         if (!observers.contains(observer)) {
@@ -225,11 +270,18 @@ public class BuyPanel implements Subject, Observer {
         }
     }
 
+    /**
+     * Unsubscribes an observer
+     * @param observer an observer
+     */
     @Override
     public void unregisterObserver(Observer observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Updates all observers
+     */
     @Override
     public void notifyObservers() {
         for (Observer observer : observers) {
@@ -237,6 +289,10 @@ public class BuyPanel implements Subject, Observer {
         }
     }
 
+    /**
+     * Sends all observers a reference to the buy panel so they can be aware of what's going on
+     * @param subject the buy panel
+     */
     @Override
     public void update(Subject subject) {
         if (subject instanceof Wave) {

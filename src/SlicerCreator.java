@@ -29,6 +29,12 @@ public class SlicerCreator {
     private static final int NUM_MEGASLICER_CHILDREN = 2;
     private static final int NUM_APEXSLICER_CHILDREN = 4;
 
+    /**
+     * Creates a slicer depending on the type specified, takes care of most of the logic typically found in the
+     * constructor
+     * @param slicerType the type of slicer requested
+     * @return the fresh slicer
+     */
     public Slicer createSlicer(SlicerType slicerType) {
         Slicer slicer = new Slicer();
         slicer.setImage(new Image("res/images/" + slicerType.toString().toLowerCase() + ".png"));

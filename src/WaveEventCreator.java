@@ -6,6 +6,11 @@ public class WaveEventCreator {
     private static final int INDEX_OF_WAVENUM = 0;
     private static final int INDEX_OF_DELAY = 2;
 
+    /**
+     * Creates the wave events as specified by the input
+     * @param waveEvent either "spawn" or "delay"
+     * @return a reference to the new wave event
+     */
     public WaveEvent parseEvent(String waveEvent) {
         String[] arguments = waveEvent.split(",");
         if (arguments[INDEX_OF_EVENT_TYPE].equals("spawn")) {
